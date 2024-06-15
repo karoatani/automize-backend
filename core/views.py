@@ -81,7 +81,7 @@ class UserAddDebtAPIView(generics.CreateAPIView):
         person = Person.objects.create(**person)
         
         debt = Debt.objects.create(user=user, person=person, **data)
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
 class UserDebtListAPIView(generics.ListAPIView):
@@ -90,7 +90,7 @@ class UserDebtListAPIView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        user_id = self.kwargs["pk"]
+        user_id = self.request.user.id
         return super().get_queryset().filter(user__id=user_id, is_deleted=False)
     
 
