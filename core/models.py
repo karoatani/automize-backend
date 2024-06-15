@@ -35,6 +35,11 @@ class Debt(models.Model):
            ("CHECK", "Check"),
            ("OTHERS", "Others"),
            )
+    STATUS = (
+            ("PAID", "Paid"),
+           ("NOT PAID", "Not Paid"),
+           ("BAD DEBT", "Bad Debt"),
+           )
     user = models.ForeignKey("Account", on_delete=models.CASCADE, default='')
     type = models.CharField(max_length=255, choices=DEBT_TYPE)
     person = models.ForeignKey("Person", on_delete=models.CASCADE, related_name="debt")
@@ -48,6 +53,5 @@ class Debt(models.Model):
 
     payment_frequency = models.CharField(max_length=20, choices=PAYMENT_FREQUENCY) 
     payment_method = models.CharField(max_length=50, choices=PAYMENT_METHOD)
-    is_paid = models.BooleanField(default=False)
-    is_bad_debt = models.BooleanField(default=False)
+    status = models.CharField(max_length=255, choices=STATUS, default="NOT PAID")
     is_deleted = models.BooleanField(default=False)

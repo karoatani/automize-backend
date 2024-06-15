@@ -32,7 +32,7 @@ class UserDebtListSerializer(serializers.ModelSerializer):
     user = UserAccountSeralizer()
     class Meta:
         model = Debt
-        fields = ["id","user","person","type", "amount", "currency", "due_date", "interest_rate", "payment_frequency", "payment_method"]
+        fields = ["id","user","person","type", "amount", "currency", "due_date", "interest_rate", "status","payment_frequency", "payment_method"]
 
 
 
@@ -41,7 +41,7 @@ class UserDebtUpdateSerializer(serializers.ModelSerializer):
     person = UserAddDebtPersonSerializer() 
     class Meta:
         model = Debt
-        fields = ["person","type", "amount", "currency", "due_date", "interest_rate", "payment_frequency", "payment_method", "is_paid", "is_bad_debt"]
+        fields = ["person","type", "amount", "currency", "due_date", "interest_rate", "payment_frequency", "payment_method", "status"]
 
 
 
@@ -57,4 +57,15 @@ class UserDebtRetrieveSerializer(serializers.ModelSerializer):
     user = UserAccountSeralizer()
     class Meta:
         model = Debt
-        fields = ["id","user","person","type", "amount", "currency", "due_date", "interest_rate", "payment_frequency", "payment_method"]
+        fields = ["id","user","person","type", "amount", "currency", "due_date", "interest_rate", "status","payment_frequency", "payment_method"]
+
+
+class UserDebtDashboardSerializer(serializers.ModelSerializer):
+    person = UserAddDebtPersonSerializer()
+    how_long = serializers.SerializerMethodField()
+    class Meta:
+        model = Debt
+        fields = ["id", "person", "amount", "due_date", "status","how_long"]
+
+    def get_how_long(self,obj):
+        return obj.how_long

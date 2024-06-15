@@ -1,4 +1,4 @@
-import csv
+import datetime
 from typing import Any
 from django.contrib.auth.hashers import make_password
 from rest_framework import generics
@@ -14,7 +14,7 @@ from rest_framework_simplejwt.tokens import AccessToken
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from .models import Debt, Person
-from .serializers import UserAddDebtSerializer, UserDebtListSerializer, UserDebtUpdateSerializer, UserDebtDeleteSerializer, UserDebtRetrieveSerializer
+from .serializers import UserAddDebtSerializer, UserDebtListSerializer, UserDebtUpdateSerializer, UserDebtDeleteSerializer, UserDebtRetrieveSerializer, UserDebtDashboardSerializer
 
 class UserAccountLoginAPiView(TokenObtainPairView):
     
@@ -93,6 +93,7 @@ class UserDebtListAPIView(generics.ListAPIView):
         user_id = self.request.user.id
         return super().get_queryset().filter(user__id=user_id, is_deleted=False)
     
+    
 
 
 class UserDebtUpdateAPIView(generics.UpdateAPIView):
@@ -145,3 +146,34 @@ class UserDebtRetrieveAPIView(generics.RetrieveAPIView):
         return super().get_queryset().filter(user__id=user_id, is_deleted=False)
     
     
+
+# class test(generics.ListAPIView):
+#     def get(self, request, *args, **kwargs):
+#         return super().get(request, *args, **kwargs)
+from django.db.models.functions import ExtractDay
+class UserDebtDashboardAPIView(APIView):
+    query_set = Debt.objects.all()
+    permission_classes = [IsAuthenticated]
+    
+
+
+    def get(self, request, *args, **kwargs):
+        user_id = self.request.user.id
+        query_set = self.query_set.filter(user__id=user_id)
+        
+        total_debt_owed_by_user = query_set.filter(type="CR").count()
+        total_debt_to_user = query_set.filter(type="DR").count()
+        current_date = datetime.datetime.now().day
+        
+        up_coming_payments = query_set.order_by("due_date").annotate(how_long=current_date - ExtractDay("due_date"))
+
+        serializer = UserDebtDashboardSerializer(up_coming_payments, many=True)
+        
+        
+        data = {
+            "total_debt_owed_by_user": total_debt_owed_by_user,
+            "total_debt_to_user": total_debt_to_user,
+            "up_coming_payments" : serializer.data
+        }        
+        
+        return Response(data)

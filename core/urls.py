@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import UserAccountRegisterAPiView, UserAccountLoginAPiView , UserAccountRefreshAPiView, UserAddDebtAPIView, UserDebtListAPIView, UserDebtUpdateAPIView, UserDebtDeleteAPIView, UserDebtRetrieveAPIView
+from .views import UserAccountRegisterAPiView, UserAccountLoginAPiView , UserAccountRefreshAPiView, UserAddDebtAPIView, UserDebtListAPIView, UserDebtUpdateAPIView, UserDebtDeleteAPIView, UserDebtRetrieveAPIView, UserDebtDashboardAPIView
 urlpatterns = [
     path('login/', UserAccountLoginAPiView.as_view(), name='token_obtain_pair'),
     path('login/token/refresh/', UserAccountRefreshAPiView.as_view(), name='token_refresh'),
@@ -9,4 +9,5 @@ urlpatterns = [
     path('update-debt/<int:pk>/', UserDebtUpdateAPIView.as_view(), name="update_debt"),
     path('delete-debt/<int:pk>/', UserDebtDeleteAPIView.as_view(), name="delete_debt"),
     path('debt-details/<int:pk>/', UserDebtRetrieveAPIView.as_view(), name="debt-details"),
+    path('dashboard/', UserDebtDashboardAPIView.as_view(), name="dashboard"),
 ]
