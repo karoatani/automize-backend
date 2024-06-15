@@ -150,7 +150,9 @@ class UserDebtRetrieveAPIView(generics.RetrieveAPIView):
 # class test(generics.ListAPIView):
 #     def get(self, request, *args, **kwargs):
 #         return super().get(request, *args, **kwargs)
-from django.db.models.functions import ExtractDay
+from django.db.models.functions import ExtractDay, Coalesce
+from django.db.models import Sum, Avg, Max, Min, Value
+from django.utils import timezone
 class UserDebtDashboardAPIView(APIView):
     query_set = Debt.objects.all()
     permission_classes = [IsAuthenticated]
@@ -159,21 +161,61 @@ class UserDebtDashboardAPIView(APIView):
 
     def get(self, request, *args, **kwargs):
         user_id = self.request.user.id
-        query_set = self.query_set.filter(user__id=user_id)
+        query_set = self.query_set.filter(user__id=user_id, is_deleted=False)
+        query_set_by_cr =query_set.filter(type="CR")
+        query_set_by_dr =query_set.filter(type="DR")
         
-        total_debt_owed_by_user = query_set.filter(type="CR").count()
-        total_debt_to_user = query_set.filter(type="DR").count()
-        current_date = datetime.datetime.now().day
+        total_debt_owed_by_user = query_set_by_cr.count()
+        total_amount_debt_owed_by_user = query_set_by_cr.aggregate(amount_sum=Coalesce(Sum("amount"), Value(0.0)))["amount_sum"]
         
-        up_coming_payments = query_set.order_by("due_date").annotate(how_long=current_date - ExtractDay("due_date"))
+        total_debt_to_user = query_set_by_dr.count()
+        total_amount_debt_to_user = query_set_by_dr.aggregate(amount_sum=Coalesce(Sum("amount"), Value(0.0)))["amount_sum"]
+        
+        average_debt_amount_owed_by_user = query_set_by_cr.aggregate(amount_avg= Coalesce(Avg("amount"), Value(0.0)))["amount_avg"]
+        average_debt_amount_to_user = query_set_by_dr.aggregate(amount_avg = Coalesce(Avg("amount"), Value(0.0)))["amount_avg"]
+        
+        largest_debt_amount_owed_by_user = query_set_by_cr.aggregate(amount_max= Coalesce(Max("amount"), Value(0.0)))["amount_max"]
+        largest_debt_amount_to_user = query_set_by_dr.aggregate(amount_max= Coalesce(Max("amount"), Value(0.0)))["amount_max"]
+        
+        smallest_debt_amount_owed_by_user = query_set_by_cr.aggregate(amount_min= Coalesce(Min("amount"), Value(0.0)))["amount_min"]
+        smallest_debt_amount_to_user = query_set_by_dr.aggregate(amount_min= Coalesce(Min("amount"), Value(0.0)))["amount_min"]
+        
+        total_amount_owed_by_user_paid = query_set.filter(status="PAID", type="CR").aggregate(total=Coalesce(Sum("amount"), Value(0.0)))["total"]
+        total_amount_to_user_paid = query_set.filter(status="PAID", type="DR").aggregate(total=Coalesce(Sum("amount"), Value(0.0)))["total"]
+        
+
+        
+        
+        
+        current_date = timezone.now()
+        day = datetime.datetime.now().day
+        over_due_debt_owed_by_user = query_set.filter(status="NOT PAID", type="CR").filter(due_date__lte=current_date).count()
+        over_due_debt_to_user = query_set.filter(status="NOT PAID", type="DR").filter(due_date__lte=current_date).count()
+
+        
+        
+        
+        
+        up_coming_payments = query_set.order_by("due_date").annotate(how_long=day - ExtractDay("due_date"))
 
         serializer = UserDebtDashboardSerializer(up_coming_payments, many=True)
-        
-        
         data = {
             "total_debt_owed_by_user": total_debt_owed_by_user,
+            "total_amount_debt_owed_by_user": total_amount_debt_owed_by_user,
             "total_debt_to_user": total_debt_to_user,
+            "total_amount_debt_to_user": total_amount_debt_to_user,
+            "average_debt_amount_owed_by_user" : average_debt_amount_owed_by_user,
+            "average_debt_amount_to_user": average_debt_amount_to_user,
+            "largest_debt_amount_owed_by_user": largest_debt_amount_owed_by_user,
+            "largest_debt_amount_to_user": largest_debt_amount_to_user,
+            "smallest_debt_amount_owed_by_user" :smallest_debt_amount_owed_by_user,
+            "smallest_debt_amount_to_user" : smallest_debt_amount_to_user,
+            "total_amount_owed_by_user_paid": total_amount_owed_by_user_paid,
+            "total_amount_to_user_paid" : total_amount_to_user_paid,
+            "over_due_debt_owed_by_user": over_due_debt_owed_by_user,
+            "over_due_debt_to_user" : over_due_debt_to_user,
             "up_coming_payments" : serializer.data
-        }        
+        }    
+            
         
         return Response(data)
