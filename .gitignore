@@ -1,4 +1,6 @@
 Pipfile
 Pipfile.lock
 *.sqlite3
+core/__pycache__
+automize/__pycache__
 core/migrations

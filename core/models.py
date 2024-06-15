@@ -11,7 +11,7 @@ class Person(models.Model):
     
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
-    phone_number = models.CharField(max_length=20)
+    phone_number = models.CharField(max_length=20, default='')
      
 class Debt(models.Model):
     DEBT_TYPE = (
@@ -35,12 +35,13 @@ class Debt(models.Model):
            ("CHECK", "Check"),
            ("OTHERS", "Others"),
            )
+    user = models.ForeignKey("Account", on_delete=models.CASCADE, default='')
     type = models.CharField(max_length=255, choices=DEBT_TYPE)
-    person = models.ForeignKey("Person", on_delete=models.CASCADE)
-    amount = models.IntegerField()
+    person = models.ForeignKey("Person", on_delete=models.CASCADE, related_name="debt")
+    amount = models.FloatField()
     currency = models.CharField(max_length=4)
     due_date = models.DateTimeField()
-    interest_rate = models.FloatField()
+    interest_rate = models.FloatField(default=0)
     
     date_created = models.DateTimeField(auto_now_add=True)
     last_updated = models.DateTimeField(auto_now=True)
@@ -49,3 +50,4 @@ class Debt(models.Model):
     payment_method = models.CharField(max_length=50, choices=PAYMENT_METHOD)
     is_paid = models.BooleanField(default=False)
     is_bad_debt = models.BooleanField(default=False)
+    is_deleted = models.BooleanField(default=False)
