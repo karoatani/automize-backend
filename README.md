@@ -267,8 +267,7 @@ fetch("http://127.0.0.1:8000/api/v1/accounts/add-debt/", requestOptions)
     "last_updated": "2024-06-15T08:50:00.232947Z",
     "payment_frequency": "MONTHLY",
     "payment_method": "BANK TRANSFER",
-    "is_paid": false,
-    "is_bad_debt": false
+    "status" : "PAID"
 }
 ```
 **Status_code** : 201 CREATED
@@ -392,8 +391,7 @@ fetch("http://127.0.0.1:8000/api/v1/accounts/list-debts/", requestOptions)
 - **interest_rate**: The interest rate (optional)
 - **payment_frequency**: How often the debt will be paid 
 - **payment_method**: The method of payment  
-- **is_paid** : Boolean field to denote a paid debt
-- **is_bad_debt** : Boolean field to mark a debt as bad debt
+- **status** : The status of the debt
 
 ```javascript
 const myHeaders = new Headers();
@@ -413,8 +411,7 @@ const raw = JSON.stringify({
   "interest_rate": 10,
   "payment_frequency": "MONTHLY",
   "payment_method": "BANK TRANSFER",
-  "is_paid": true,
-  "is_bad_debt": true
+  "status": "PAID"
 });
 
 const requestOptions = {
@@ -446,8 +443,7 @@ fetch("http://127.0.0.1:8000/api/v1/accounts/update-debt/2/", requestOptions)
     "last_updated": "2024-06-15T08:50:00.232947Z",
     "payment_frequency": "MONTHLY",
     "payment_method": "BANK TRANSFER",
-    "is_paid": false,
-    "is_bad_debt": false
+    "status" : "PAID"
 }
 ```
 **Status_code** : 200 OK
@@ -475,8 +471,7 @@ const raw = JSON.stringify({
   "interest_rate": 10,
   "payment_frequency": "MONTHLY",
   "payment_method": "BANK TRANSFER",
-  "is_paid": true,
-  "is_bad_debt": true
+  "status": "PAID"
 });
 
 const requestOptions = {
