@@ -157,5 +157,4 @@ STORAGES = {
     },
 }
 
-CSRF_TRUSTED_ORIGINS = ["https://full-edge-scrawny-profit-beta.pipeops.app/", "http://*.*.com"]
-CSRF_COOKIE_SECURE=False
+CSRF_TRUSTED_ORIGINS = ["https://full-edge-scrawny-profit-beta.pipeops.app/", "http://*.*.com", "https://*.pipeops.app/", "http://*.pipeops.app/"]
