@@ -156,4 +156,6 @@ STORAGES = {
         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
     },
 }
+
 CSRF_TRUSTED_ORIGINS = ["https://full-edge-scrawny-profit-beta.pipeops.app/", "http://*.*.com"]
+CSRF_COOKIE_SECURE=False
