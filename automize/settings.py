@@ -32,6 +32,7 @@ ALLOWED_HOSTS = ["*"]
 # Application definition
 
 INSTALLED_APPS = [
+    "daphne",
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -40,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     "rest_framework",
     "rest_framework_simplejwt",
+    "channels",
     "core",
 ]
 
@@ -157,4 +159,14 @@ STORAGES = {
     },
 }
 
-CSRF_TRUSTED_ORIGINS = ["https://full-edge-scrawny-profit-beta.pipeops.app/", "http://*.*.com", "https://*.pipeops.app/", "http://*.pipeops.app/"]
+CSRF_TRUSTED_ORIGINS = ["https://full-edge-scrawny-profit-beta.pipeops.app/", "http://127.0.0.1:56368", "https://*.pipeops.app/", "http://*.pipeops.app/", "http://*.*.com","http://*.com"]
+ASGI_APPLICATION = "automize.asgi.application"
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("127.0.0.1", 6379)],
+        },
+    },
+}

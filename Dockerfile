@@ -28,4 +28,4 @@ ENV PORT $PORT
 EXPOSE $PORT
 
 # Use gunicorn on the given port
-CMD gunicorn --bind :$PORT --workers 2 automize.wsgi
+CMD python manage.py runserver

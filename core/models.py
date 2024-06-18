@@ -22,7 +22,7 @@ class Debt(models.Model):
             ("MONTHLY", "Monthly"),
            ("BI-MONTHLY", "Bi-Monthly"),
            ("WEEKLY", "Weekly"),
-           ("BI-WEEKLyY", "Bi-Weekly"),
+           ("BI-WEEKLY", "Bi-Weekly"),
            ("QUARTERLY", "Quarterly"),
            ("SEMI-ANNUALLY", "Semi-Annually"),
            ("ANNUALLY", "Annually"),
@@ -55,3 +55,13 @@ class Debt(models.Model):
     payment_method = models.CharField(max_length=50, choices=PAYMENT_METHOD)
     status = models.CharField(max_length=255, choices=STATUS, default="NOT PAID")
     is_deleted = models.BooleanField(default=False)
+
+
+
+
+class Notification(models.Model):
+    user = models.ForeignKey("Account", on_delete=models.CASCADE)
+    is_read = models.BooleanField(default=False)
+    message = models.TextField()
+    date_created = models.DateTimeField(auto_now_add=True)
+    last_updated = models.DateTimeField(auto_now=True)
