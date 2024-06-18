@@ -23,8 +23,9 @@ COPY . /code/
 # Set the port number as an environment variable
 ARG PORT=8000
 ENV PORT $PORT
+
 # Expose the given port
 EXPOSE $PORT
 
 # Use gunicorn on the given port
-CMD gunicorn --bind :$PORT --workers 2 automize.asgi
+CMD gunicorn --bind :$PORT --workers 2 automize.wsgi
