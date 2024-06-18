@@ -23,7 +23,6 @@ COPY . /code/
 # Set the port number as an environment variable
 ARG PORT=8000
 ENV PORT $PORT
-ENV DJANGO_SETTINGS_MODULE "automize.setting"
 # Expose the given port
 EXPOSE $PORT
 
