@@ -41,11 +41,13 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     "rest_framework",
     "rest_framework_simplejwt",
+    "corsheaders",
     "channels",
     "core",
 ]
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     'django.middleware.security.SecurityMiddleware',
     "whitenoise.middleware.WhiteNoiseMiddleware",
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -170,3 +172,8 @@ CHANNEL_LAYERS = {
         },
     },
 }
+
+
+CORS_ALLOW_ALL_ORIGINS = True  # You can set this to True if you want to allow all origins
+
+CORS_ALLOW_CREDENTIALS = True  # If you need to allow credentials (cookies, authorization headers) across origins
