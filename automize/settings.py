@@ -174,6 +174,6 @@ CHANNEL_LAYERS = {
 }
 
 
-CORS_ALLOW_ALL_ORIGINS = True  # You can set this to True if you want to allow all origins
+CORS_ALLOW_ALL_ORIGINS = True  
 
-CORS_ALLOW_CREDENTIALS = True  # If you need to allow credentials (cookies, authorization headers) across origins
+CORS_ALLOW_CREDENTIALS = True  
