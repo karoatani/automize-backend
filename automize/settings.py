@@ -164,16 +164,16 @@ STORAGES = {
 CSRF_TRUSTED_ORIGINS = ["https://full-edge-scrawny-profit-beta.pipeops.app/", "http://127.0.0.1:56368", "https://*.pipeops.app/", "http://*.pipeops.app/", "http://*.*.com","http://*.com"]
 ASGI_APPLICATION = "automize.asgi.application"
 
-CHANNEL_LAYERS = {
-    "default": {
-        "BACKEND": "channels_redis.core.RedisChannelLayer",
-        "CONFIG": {
-            "hosts": [("127.0.0.1", 6379)],
-        },
-    },
-}
+# CHANNEL_LAYERS = {
+#     "default": {
+#         "BACKEND": "channels_redis.core.RedisChannelLayer",
+#         "CONFIG": {
+#             "hosts": [("127.0.0.1", 6379)],
+#         },
+#     },
+# }
 
 
 CORS_ALLOW_ALL_ORIGINS = True  
 
-CORS_ALLOW_CREDENTIALS = True  
+CORS_ALLOW_CREDENTIALS = True
